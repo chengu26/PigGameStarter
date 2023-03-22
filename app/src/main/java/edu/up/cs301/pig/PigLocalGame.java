@@ -61,7 +61,7 @@ public class PigLocalGame extends LocalGame {
      */
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
-        // make copy of curr game state
+        pigGameState = new PigGameState(pigGameState); // creates copy
         p.sendInfo(pigGameState);
     }//sendUpdatedSate
 
