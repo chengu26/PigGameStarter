@@ -3,9 +3,13 @@ package edu.up.cs301.pig;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.actionMsg.GameAction;
+import edu.up.cs301.game.actionMsg.PigHoldAction;
+import edu.up.cs301.game.actionMsg.PigRollAction;
 import edu.up.cs301.game.infoMsg.GameState;
 
 import android.util.Log;
+
+import java.util.Random;
 
 // dummy comment, to see if commit and push work from srvegdahl account
 
@@ -17,11 +21,14 @@ import android.util.Log;
  */
 public class PigLocalGame extends LocalGame {
 
+    PigGameState pigGameState;
+
     /**
      * This ctor creates a new game state
      */
     public PigLocalGame() {
-        //TODO  You will implement this constructor
+        pigGameState = new PigGameState();
+
     }
 
     /**
@@ -29,7 +36,9 @@ public class PigLocalGame extends LocalGame {
      */
     @Override
     protected boolean canMove(int playerIdx) {
-        //TODO  You will implement this method
+        if (playerIdx == pigGameState.getPlayerID()){
+            return true;
+        }
         return false;
     }
 
@@ -40,16 +49,26 @@ public class PigLocalGame extends LocalGame {
      */
     @Override
     protected boolean makeMove(GameAction action) {
-        //TODO  You will implement this method
-        return false;
-    }//makeMove
+        if (action instanceof PigHoldAction) {
+            pigGameState.endTurn();
+            return true;
+            }
+        else if (action instanceof PigRollAction) {
+            pigGameState.rollDice();
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
     /**
      * send the updated state to a given player
      */
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
-        //TODO  You will implement this method
+        pigGameState = new PigGameState(pigGameState);
+        p.sendInfo(pigGameState);
     }//sendUpdatedSate
 
     /**
@@ -61,8 +80,15 @@ public class PigLocalGame extends LocalGame {
      */
     @Override
     protected String checkIfGameOver() {
-        //TODO  You will implement this method
-        return null;
+        if (pigGameState.getPlayer1Score() >= 50){
+            return "Player 1 wins!";
+        }
+        else if (pigGameState.getPlayer2Score() >= 50){
+            return "Player 2 wins";
+        }
+        else{
+            return null;
+        }
     }
 
 }// class PigLocalGame
