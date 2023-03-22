@@ -22,4 +22,7 @@ public class ReadyAction extends GameAction {
 	public ReadyAction(GamePlayer p) {
 		super(p);
 	}
+
+    public static class PigRollAction {
+    }
 }
