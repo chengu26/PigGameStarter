@@ -1,8 +1,10 @@
 package edu.up.cs301.pig;
 
+import edu.up.cs301.game.Game;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.actionMsg.GameAction;
+import edu.up.cs301.game.actionMsg.PigHoldAction;
 import edu.up.cs301.game.infoMsg.GameState;
 
 import android.util.Log;
@@ -20,16 +22,24 @@ public class PigLocalGame extends LocalGame {
     /**
      * This ctor creates a new game state
      */
-    public PigLocalGame() {
-        //TODO  You will implement this constructor
+
+    PigGameState pigGameState;
+
+    public PigLocalGame () {
+
+        pigGameState = new PigGameState();
+
     }
 
     /**
      * can the player with the given id take an action right now?
      */
     @Override
+
     protected boolean canMove(int playerIdx) {
-        //TODO  You will implement this method
+        if (playerIdx == pigGameState.getPlayerID()){
+            return true;
+        }
         return false;
     }
 
@@ -40,7 +50,9 @@ public class PigLocalGame extends LocalGame {
      */
     @Override
     protected boolean makeMove(GameAction action) {
-        //TODO  You will implement this method
+        if (action instanceof PigHoldAction == true){
+
+        }
         return false;
     }//makeMove
 
@@ -49,7 +61,8 @@ public class PigLocalGame extends LocalGame {
      */
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
-        //TODO  You will implement this method
+        // make copy of curr game state
+        p.sendInfo(pigGameState);
     }//sendUpdatedSate
 
     /**
@@ -61,8 +74,15 @@ public class PigLocalGame extends LocalGame {
      */
     @Override
     protected String checkIfGameOver() {
-        //TODO  You will implement this method
-        return null;
+        if (pigGameState.getPlayer1Score() >= 50){
+            return "Player 1 wins!";
+        }
+        else if (pigGameState.getPlayer2Score() >= 50){
+            return "Player 2 wins";
+        }
+        else{
+            return null;
+        }
     }
 
 }// class PigLocalGame
