@@ -1,10 +1,10 @@
 package edu.up.cs301.pig;
 
-import edu.up.cs301.game.Game;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.actionMsg.GameAction;
 import edu.up.cs301.game.actionMsg.PigHoldAction;
+import edu.up.cs301.game.actionMsg.PigRollAction;
 import edu.up.cs301.game.infoMsg.GameState;
 
 import android.util.Log;
@@ -21,14 +21,12 @@ import java.util.Random;
  */
 public class PigLocalGame extends LocalGame {
 
+    PigGameState pigGameState;
+
     /**
      * This ctor creates a new game state
      */
-
-    PigGameState pigGameState;
-
-    public PigLocalGame () {
-
+    public PigLocalGame() {
         pigGameState = new PigGameState();
 
     }
@@ -37,7 +35,6 @@ public class PigLocalGame extends LocalGame {
      * can the player with the given id take an action right now?
      */
     @Override
-
     protected boolean canMove(int playerIdx) {
         if (playerIdx == pigGameState.getPlayerID()){
             return true;
@@ -51,66 +48,26 @@ public class PigLocalGame extends LocalGame {
      * @return true if the action was taken or false if the action was invalid/illegal.
      */
     @Override
-    protected boolean makeMove(GameAction action)
-    {
-        if (action instanceof PigHoldAction == true)
-        {
-            // check to see if the action is a PigRollAction
-            if (action instanceof PigRollAction)
-            {
-                // roll the dice
-                int dieValue = (new Random()).nextInt(6) + 1;
-
-                // if the die value is 1, set the current running total to 0 and make it the other player's turn (if there is another player)
-                if (dieValue == 1)
-                {
-                    gameState.setRunningTotal(0);
-
-                    if (players.length > 1)
-                    {
-                        gameState.getPlayerID((gameState.getPlayerID() + 1) % 2);
-                    }
-                }
-                // if the die value is anything other than 1, add it to the current running total
-                else {
-                    gameState.setCurrentRunningTotal(gameState.getCurrentRunningTotal() + dieValue);
-                }
-
-                // return true to indicate that the move was legal
-                return true;
+    protected boolean makeMove(GameAction action) {
+        if (action instanceof PigHoldAction) {
+            pigGameState.endTurn();
+            return true;
             }
-            // check to see if the action is a PigHoldAction
-            else if (action instanceof PigHoldAction)
-            {
-                // add the current running total to the score of the current player
-                int currentPlayer = gameState.getCurrentPlayer();
-                int currentScore = gameState.getScore(currentPlayer);
-                gameState.setScore(currentPlayer, currentScore + gameState.getCurrentRunningTotal());
-
-                // set the current running total to 0
-                gameState.setCurrentRunningTotal(0);
-
-                // if there is more than one player, make it the other player's turn
-                if (players.length > 1)
-                {
-                    gameState.setCurrentPlayer((currentPlayer + 1) % 2);
-                }
-
-                // return true to indicate that the move was legal
-                return true;
-            }
-            // if the action is neither a PigRollAction nor a PigHoldAction, return false to indicate that
-
+        else if (action instanceof PigRollAction) {
+            pigGameState.rollDice();
+            return true;
         }
-        return false;
-    }//makeMove
+        else {
+            return false;
+        }
+    }
 
     /**
      * send the updated state to a given player
      */
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
-        pigGameState = new PigGameState(pigGameState); // creates copy
+        pigGameState = new PigGameState(pigGameState);
         p.sendInfo(pigGameState);
     }//sendUpdatedSate
 

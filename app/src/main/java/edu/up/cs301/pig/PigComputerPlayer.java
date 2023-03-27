@@ -28,7 +28,8 @@ public class PigComputerPlayer extends GameComputerPlayer {
      */
     @Override
     protected void receiveInfo(GameInfo info) {
-        //checkpoint3
+        PigGameState pigGameState = new PigGameState((PigGameState) info);
+        if (pigGameState.getPlayerID() == )
     }//receiveInfo
 
 }
