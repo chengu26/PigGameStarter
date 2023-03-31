@@ -32,8 +32,9 @@ public class PigComputerPlayer extends GameComputerPlayer {
      */
     @Override
     protected void receiveInfo(GameInfo info) {
+       sleep(1000);
        PigGameState pigGameState = new PigGameState((PigGameState) info);
-       if (pigGameState.getPlayerID() == 0){
+       if (pigGameState.getPlayerID() != this.playerNum){
             return;
        }
        else{

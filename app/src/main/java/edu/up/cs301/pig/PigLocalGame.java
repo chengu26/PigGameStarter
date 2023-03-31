@@ -49,12 +49,20 @@ public class PigLocalGame extends LocalGame {
      */
     @Override
     protected boolean makeMove(GameAction action) {
+        System.out.println(this.playerNames.length);
         if (action instanceof PigHoldAction) {
             pigGameState.endTurn();
-            return true;
+            if (this.players.length>1){
+                pigGameState.switchTurns();
             }
+            return true;
+        }
         else if (action instanceof PigRollAction) {
-            pigGameState.rollDice();
+            if(pigGameState.rollDice() == -1){
+                if (this.players.length>1){
+                    pigGameState.switchTurns();
+                }
+            }
             return true;
         }
         else {

@@ -25,7 +25,7 @@ public class PigGameState extends GameState
     // copy constructor
     public PigGameState(PigGameState original)
     {
-        this.playerID = original.playerID;
+        this.playerID = original.getPlayerID();
         this.player1Score = original.player1Score;
         this.player2Score = original.player2Score;
         this.runningTotal = original.runningTotal;
@@ -85,16 +85,17 @@ public class PigGameState extends GameState
     }
 
     // roll the dice and update the state accordingly
-    public void rollDice()
+    public int rollDice()
     {
         Random rand = new Random();
         diceValue = rand.nextInt(6) + 1;
         if (diceValue == 1)
         {
             runningTotal = 0;
-            playerID = 1 - playerID; // switch to the other player's turn
+            return -1;
         } else {
             runningTotal += diceValue;
+            return 0;
         }
     }
 
@@ -108,6 +109,10 @@ public class PigGameState extends GameState
         {
             player2Score += runningTotal;
         }
+        runningTotal = 0;
+    }
+
+    public void switchTurns(){
         runningTotal = 0;
         playerID = 1 - playerID; // switch to the other player's turn
     }
